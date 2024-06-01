@@ -37,7 +37,7 @@ int main(){
     }
 
     char msg[] = "hello";
-    write(fd, msg, strlen(msg))
+    write(fd, msg, strlen(msg));
 
     char rbuff[64] = {};
     ssize_t n = read(fd, rbuff, sizeof(rbuff) - 1);

@@ -11,6 +11,7 @@
 #include "sys/socket.h"
 #include <netinet/ip.h>
 #include <unistd.h>
+#include "io_func.h"
 #include <arpa/inet.h>
 #include <unistd.h>
 
@@ -58,6 +59,7 @@ int main(){
     }
 
     while(true){
+        //accept syscall
         struct sockaddr_in client_addr = {};
         socklen_t addrlen = sizeof(client_addr);
         int conn_fd = accept(fd, (struct sockaddr *)&client_addr, &addrlen);
