@@ -8,6 +8,13 @@
 #include <stdint.h>
 #include <assert.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+
+const size_t k_max_msg = 4096;
+
+static void msg(const char *msg);
 
 static int32_t read_full(int fd, char *buff, size_t n);
 static int32_t write_all(int fd, const char *buff, size_t n);

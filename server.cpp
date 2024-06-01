@@ -15,16 +15,12 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-const size_t k_max_msg = 4096;
+
 
 static void die(const char *msg) {
     int err = errno;
     fprintf(stderr, "[%d] %s\n", err, msg);
     abort();
-}
-
-static void msg(const char *msg) {
-    fprintf(stderr, "%s\n", msg);
 }
 
 static int32_t one_request(int conn_fd){
@@ -94,8 +90,6 @@ int main(){
             }
         }
     }
-
-
 
     return 0;
 }

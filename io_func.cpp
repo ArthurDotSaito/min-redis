@@ -29,3 +29,7 @@ static int32_t write_all(int fd, const char *buff, size_t n){
     }
     return 0;
 }
+
+static void msg(const char *msg) {
+    fprintf(stderr, "%s\n", msg);
+}
