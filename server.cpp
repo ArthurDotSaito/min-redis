@@ -15,6 +15,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+const size_t k_max_msg = 4096;
+
 static void die(const char *msg) {
     int err = errno;
     fprintf(stderr, "[%d] %s\n", err, msg);
@@ -25,16 +27,35 @@ static void msg(const char *msg) {
     fprintf(stderr, "%s\n", msg);
 }
 
-static void read_and_write_dummy(int conn_fd){
-    char rbuf[64] = {};
-    ssize_t n = read(conn_fd, rbuf, sizeof(rbuf) - 1);
-    if(n < 0){
-        msg("read() error");
-        return;
+static int32_t one_request(int conn_fd){
+    char rbuff[4 + k_max_msg + 1];
+    errno = 0;
+    int32_t err = read_full(conn_fd, rbuff, 4);
+    if(err){
+        if(errno == 0){
+            msg("EOF");
+        } else{
+            msg("read() error");
+        }
+        return err;
     }
-    printf("client says: %s\n", rbuf);
-    char wbuff[] = "world";
-    write(conn_fd, wbuff, strlen(wbuff));
+
+    uint32_t len = 0;
+    memcpy(&len, rbuff, 4);
+    if(len > k_max_msg){
+        msg("too long");
+        return -1;
+    }
+
+    rbuff[4 + len] = '\0';
+    printf("client: %s\n", &rbuff[4]);
+
+    const char reply[] = "world";
+    char wbuff[4 + sizeof(reply)];
+    len = (uint32_t) strlen(reply);
+    memcpy(wbuff, &len, 4);
+    memcpy(&wbuff[4], reply, len);
+    return write_all(conn_fd, wbuff, 4 + len);
 }
 
 
@@ -66,9 +87,15 @@ int main(){
         if(conn_fd){
             continue;
         }
-
-        read_and_write_dummy(conn_fd);
-        close(conn_fd);
+        while(true){
+            int32_t err = one_request(conn_fd);
+            if(err){
+                break;
+            }
+        }
     }
+
+
+
     return 0;
 }
