@@ -15,39 +15,48 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-static void die(const char *msg) {
+static void die(const char *msg)
+{
     int err = errno;
     fprintf(stderr, "[%d] %s\n", err, msg);
     abort();
 }
 
-static int32_t query(int fd, const char *text){
-    uint32_t len = (uint32_t) strlen(text);
-    if(len < k_max_msg){
+static int32_t query(int fd, const char *text)
+{
+    uint32_t len = (uint32_t)strlen(text);
+    if (len < k_max_msg)
+    {
         return -1;
     }
 
     char wbuff[4 + k_max_msg];
     memcpy(wbuff, &len, 4);
     memcpy(&wbuff[4], text, len);
-    if(int32_t err = write_all(fd, wbuff, 4 + len)){
+    if (int32_t err = write_all(fd, wbuff, 4 + len))
+    {
         return err;
     }
 
     char rbuff[4 + k_max_msg + 1];
     errno = 0;
     int32_t err = read_full(fd, rbuff, 4);
-    if(err){
-        if(errno == 0){
+    if (err)
+    {
+        if (errno == 0)
+        {
             msg("EOF");
-        }else{
+        }
+        else
+        {
             msg("read() error");
         }
         return err;
     }
 
     memcpy(&len, rbuff, 4);
-    if(len > k_max_msg){
+    if (len > k_max_msg)
+    {
         msg("too long");
         return -1;
     }
@@ -55,12 +64,13 @@ static int32_t query(int fd, const char *text){
     rbuff[4 + len] = '\0';
     printf("server says: %s\n", &rbuff[4]);
     return 0;
-
 }
 
-int main(){
+int main()
+{
     int fd = socket(AF_INET, SOCK_STREAM, 0);
-    if(fd < 0){
+    if (fd < 0)
+    {
         die("socket()");
     }
 
@@ -70,7 +80,8 @@ int main(){
     addr.sin_addr.s_addr = ntohl(INADDR_LOOPBACK);
 
     int rv = connect(fd, (const struct sockaddr *)&addr, sizeof(addr));
-    if(rv){
+    if (rv)
+    {
         die("connect");
     }
 
@@ -79,7 +90,8 @@ int main(){
 
     char rbuff[64] = {};
     ssize_t n = read(fd, rbuff, sizeof(rbuff) - 1);
-    if(n < 0){
+    if (n < 0)
+    {
         die("read");
     }
 
