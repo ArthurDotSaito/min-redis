@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include "io_func.h"
 #include <arpa/inet.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <vector>
 
@@ -60,6 +61,25 @@ static int32_t one_request(int conn_fd)
     return write_all(conn_fd, wbuff, 4 + len);
 }
 
+static void fd_set_nonblocking(int fd){
+    errno = 0;
+    int flags = fcntl(fd, F_GETFL, 0);
+
+    if(errno){
+        die("fcntl error");
+        return;
+    }
+
+    flags |= O_NONBLOCK;
+
+    errno = 0;
+    (void) fcntl(fd, F_SETFL, flags);
+    if(errno){
+        die("fcntl error");
+        return;
+    }
+}
+
 int main()
 {
     int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -89,6 +109,7 @@ int main()
         die("listen()");
     }
 
+    // a map of all client connections, keyed by fd
     std::vector<Conn *> fd2conn;
 
     while (true)
