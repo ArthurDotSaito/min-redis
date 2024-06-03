@@ -14,6 +14,7 @@
 #include "io_func.h"
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <poll.h>
 #include <unistd.h>
 #include <vector>
 
@@ -112,23 +113,35 @@ int main()
     // a map of all client connections, keyed by fd
     std::vector<Conn *> fd2conn;
 
+    //set to nonblocking fd
+    fd_set_nonblocking(fd);
+
+    std::vector<struct pollfd> poll_args;
+
     while (true)
     {
-        // accept syscall
-        struct sockaddr_in client_addr = {};
-        socklen_t addrlen = sizeof(client_addr);
-        int conn_fd = accept(fd, (struct sockaddr *)&client_addr, &addrlen);
-        if (conn_fd)
-        {
-            continue;
-        }
-        while (true)
-        {
-            int32_t err = one_request(conn_fd);
-            if (err)
-            {
-                break;
+        poll_args.clear();
+
+        struct pollfd pfd = {fd, POLLIN, 0};
+        poll_args.push_back(pfd);
+
+        //connection fds
+        for(Conn *conn : fd2conn){
+            if(!conn){
+                continue;
             }
+
+            struct pollfd pfd = {};
+            pfd.fd = conn->fd;
+            pfd.events = (conn->state == STATE_REQ) ? POLLIN : POLLOUT;
+            pfd.events = pfd.events | POLLERR;
+            poll_args.push_back(pfd);
+        }
+
+        //poll for active fds. Timeout is not important
+        int rv = poll(poll_args.data(), (nfds_t)poll_args.size(), 1000);
+        if(rv < 0){
+            die("poll");
         }
     }
 
