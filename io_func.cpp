@@ -67,7 +67,37 @@ static bool try_fill_buffer(Conn *conn){
 }
 
 static bool try_flush_buffer(Conn *conn){
-    
+    ssize_t rv = 0;
+    do{
+        ssize_t  remain = conn->wbuff_size - conn->wbuff_sent;
+        rv = write(conn->fd, &conn->wbuff[conn->wbuff_sent], remain);
+    } while (rv < 0 && errno == EINTR);
+
+    if(rv < 0 && errno == EAGAIN){
+        return false;
+    }
+
+    if(rv < 0){
+        msg("write() error");
+        conn->state = STATE_END;
+        return false;
+    }
+
+    conn->wbuff_sent += (size_t)rv;
+    assert(conn->wbuff_sent <= conn->wbuff_size);
+    if(conn->wbuff_sent == conn->wbuff_size){
+        //response was fully sent
+        conn->state = STATE_REQ;
+        conn->wbuff_sent = 0;
+        conn->wbuff_size = 0;
+        return false;
+    }
+
+    return true;
+}
+
+static void state_res(Conn *conn) {
+    while (try_flush_buffer(conn)) {}
 }
 
 static void state_req(Conn *conn) {
@@ -78,6 +108,6 @@ static void connection_io(Conn *conn){
     if(conn->state == STATE_REQ){
         state_req(conn);
     } else if(conn->state == STATE_RES){
-        //state_res(conn);
+        state_res(conn);
     }
 }
