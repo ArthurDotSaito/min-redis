@@ -9,4 +9,5 @@ add_executable(Redis
         client.cpp
         client.h
         server.cpp
-        server.h)
+        server.h
+        io_func.cpp)
