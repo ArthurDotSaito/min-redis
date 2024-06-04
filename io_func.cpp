@@ -4,6 +4,7 @@
 
 #include "io_func.h"
 #include "server.h"
+#include <string.h>
 
 static int32_t read_full(int fd, char *buff, size_t n){
     while(n > 0){
@@ -35,6 +36,43 @@ static void msg(const char *msg) {
     fprintf(stderr, "%s\n", msg);
 }
 
+static bool try_one_request(Conn *conn){
+    if(conn->rbuff_size < 4){
+        return false;
+    }
+
+    uint32_t len = 0;
+    memcpy(&len, &conn->rbuff[0], 4);
+    if(len > k_max_msg){
+        msg("too long");
+        conn->state = STATE_END;
+        return false;
+    }
+
+    if(4 + len > conn->rbuff_size){
+        //Here we have not enough data in the buffer. Try in next iteration.
+        return false;
+    }
+
+    //Just doing something to feedback.
+    printf("client says: %.*s\n", len, &conn->rbuff[4]);
+
+    memcpy(&conn->wbuff[0], &len,4);
+    memcpy(&conn->wbuff[4], &conn->rbuff[4],len);
+    conn->wbuff_size = 4 + len;
+
+    size_t remain = conn->rbuff_size - 4 - len;
+    if(remain){
+        memmove(conn->rbuff, &conn->rbuff[4 + len], remain);
+    }
+    conn->rbuff_size = remain;
+
+    conn->state = STATE_RES;
+    state_res(conn);
+
+    return (conn->state == STATE_REQ);
+}
+
 static bool try_fill_buffer(Conn *conn){
     assert(conn->rbuff_size < sizeof(conn->rbuff));
     ssize_t rv = 0;
@@ -62,7 +100,7 @@ static bool try_fill_buffer(Conn *conn){
     conn->rbuff_size += (size_t)rv;
     assert(conn->rbuff_size <= sizeof(conn->rbuff));
 
-    //while(try_one_request)
+    while(try_one_request(conn)){}
     return (conn->state == STATE_REQ);
 }
 

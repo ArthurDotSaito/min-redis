@@ -20,6 +20,7 @@ static void msg(const char *msg);
 static int32_t read_full(int fd, char *buff, size_t n);
 static int32_t write_all(int fd, const char *buff, size_t n);
 
+static void state_res(Conn *conn)
 static void connection_io(Conn *conn);
 
 #endif //REDIS_IO_FUNC_H
