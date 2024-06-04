@@ -118,6 +118,9 @@ static int32_t accept_new_connections(std::vector<Conn *> &fd2conn, int fd){
     return 0;
 }
 
+
+
+
 int main()
 {
     int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -180,6 +183,13 @@ int main()
         if(rv < 0){
             die("poll");
         }
+
+        for(size_t i = 1; i < poll_args.size(); ++i){
+            if(poll_args[i].revents){
+                Conn *conn = fd2conn[poll_args[i].fd];
+            }
+        }
+
 
         if(poll_args[0].revents){
             (void) accept_new_connections(fd2conn, fd);
