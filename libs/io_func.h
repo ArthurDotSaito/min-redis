@@ -24,4 +24,4 @@ void state_res(Conn *conn);
 void state_req(Conn *conn);
 void connection_io(Conn *conn);
 
-#endif //REDIS_IO_FUNC_H
+#endif // REDIS_IO_FUNC_H

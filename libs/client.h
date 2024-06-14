@@ -5,10 +5,8 @@
 #ifndef REDIS_CLIENT_H
 #define REDIS_CLIENT_H
 
-
-class client {
-
+class client
+{
 };
 
-
-#endif //REDIS_CLIENT_H
+#endif // REDIS_CLIENT_H
