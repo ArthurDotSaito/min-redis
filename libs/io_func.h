@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "server.h"
+#include <string.h>
 
 const size_t k_max_msg = 4096;
 

@@ -5,8 +5,16 @@
 #ifndef REDIS_CLIENT_H
 #define REDIS_CLIENT_H
 
-class client
-{
-};
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include "sys/socket.h"
+#include <netinet/ip.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <io_func.h>
 
 #endif // REDIS_CLIENT_H
