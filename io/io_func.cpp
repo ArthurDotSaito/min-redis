@@ -2,9 +2,7 @@
 // Created by arthur on 01/06/24.
 //
 
-#include "io_func.h"
-#include "server.h"
-#include <string.h>
+#include <io_func.h>
 
 int32_t read_full(int fd, char *buff, size_t n)
 {

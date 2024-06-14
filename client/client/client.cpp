@@ -2,17 +2,7 @@
 // Created by arthur on 30/05/24.
 //
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include "sys/socket.h"
-#include <netinet/ip.h>
-#include <unistd.h>
-#include "io_func.h"
-#include <arpa/inet.h>
-#include <unistd.h>
+#include <client.h>
 
 static void die(const char *msg)
 {
@@ -84,17 +74,27 @@ int main()
         die("connect");
     }
 
-    char msg[] = "hello";
-    write(fd, msg, strlen(msg));
-
-    char rbuff[64] = {};
-    ssize_t n = read(fd, rbuff, sizeof(rbuff) - 1);
-    if (n < 0)
+    // multiuple pipelined requests:
+    const char *query_list[3] = {"hello1", "hello2", "hello3"};
+    for (size_t i = 0; i < 3; ++i)
     {
-        die("read");
+        int32_t err = send_request(fd, query_list[i]);
+        if (err)
+        {
+            goto L_DONE;
+        }
     }
 
-    printf("server response: %s\n", rbuff);
+    for (size_t i = 0; i < 3; ++i)
+    {
+        int32_t err = read_response(fd);
+        if (err)
+        {
+            goto L_DONE;
+        }
+    }
+
+L_DONE:
     close(fd);
     return 0;
 }

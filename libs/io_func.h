@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "server.h"
+#include <string.h>
 
 const size_t k_max_msg = 4096;
 
@@ -24,4 +25,4 @@ void state_res(Conn *conn);
 void state_req(Conn *conn);
 void connection_io(Conn *conn);
 
-#endif //REDIS_IO_FUNC_H
+#endif // REDIS_IO_FUNC_H

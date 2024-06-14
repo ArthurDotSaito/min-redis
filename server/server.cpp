@@ -2,21 +2,7 @@
 // Created by arthur on 30/05/24.
 //
 
-#include "server.h"
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include "sys/socket.h"
-#include <netinet/ip.h>
-#include <unistd.h>
-#include "io_func.h"
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <poll.h>
-#include <unistd.h>
-#include <vector>
+#include <server.h>
 
 static void die(const char *msg)
 {
