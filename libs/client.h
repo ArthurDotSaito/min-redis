@@ -16,5 +16,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <io_func.h>
+#include <request.h>
+#include <response.h>
 
 #endif // REDIS_CLIENT_H
