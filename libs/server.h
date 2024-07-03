@@ -4,7 +4,6 @@
 
 #ifndef REDIS_SERVER_H
 #define REDIS_SERVER_H
-#include "io_func.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -13,12 +12,12 @@
 #include "sys/socket.h"
 #include <netinet/ip.h>
 #include <unistd.h>
-#include "io_func.h"
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <poll.h>
 #include <unistd.h>
 #include <vector>
+#include "common.h"
 
 enum
 {

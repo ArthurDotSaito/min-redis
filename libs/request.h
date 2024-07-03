@@ -10,6 +10,6 @@
 #include <string.h>
 #include <io_func.h>
 
-static int32_t send_request(int fd, const char *text);
+int32_t send_request(int fd, const char *text);
 
 #endif // REQUEST_H
