@@ -11,6 +11,6 @@
 #include <string.h>
 #include <io_func.h>
 
-static int32_t read_response(int fd);
+int32_t read_response(int fd);
 
 #endif // RESPONSE_H

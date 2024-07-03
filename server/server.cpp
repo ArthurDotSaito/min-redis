@@ -3,6 +3,7 @@
 //
 
 #include <server.h>
+#include "io_func.h"
 
 static void die(const char *msg)
 {

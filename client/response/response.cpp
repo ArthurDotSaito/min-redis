@@ -3,7 +3,7 @@
 //
 #include <response.h>
 
-static int32_t read_response(int fd)
+int32_t read_response(int fd)
 {
     char rbuff[4 + k_max_msg + 1];
     errno = 0;

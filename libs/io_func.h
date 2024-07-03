@@ -13,10 +13,9 @@
 #include <errno.h>
 #include <string.h>
 #include "server.h"
+#include "common.h"
 
 struct Conn;
-
-const size_t k_max_msg = 4096;
 
 void msg(const char *msg);
 

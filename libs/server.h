@@ -4,7 +4,6 @@
 
 #ifndef REDIS_SERVER_H
 #define REDIS_SERVER_H
-#include "io_func.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -18,6 +17,7 @@
 #include <poll.h>
 #include <unistd.h>
 #include <vector>
+#include "common.h"
 
 enum
 {
