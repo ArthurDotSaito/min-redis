@@ -8,12 +8,15 @@ BUILD_DIR=./build
 SERVER_OBJ=$(BUILD_DIR)/server.o
 CLIENT_OBJ=$(BUILD_DIR)/client.o $(BUILD_DIR)/request.o $(BUILD_DIR)/response.o $(BUILD_DIR)/io_func.o
 
-all: server client
+SERVER_EXE=server_app
+CLIENT_EXE=client_app
 
-server: $(SERVER_OBJ)
+all: $(SERVER_EXE) $(CLIENT_EXE)
+
+$(SERVER_EXE): $(SERVER_OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
-client: $(CLIENT_OBJ)
+$(CLIENT_EXE): $(CLIENT_OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
 $(BUILD_DIR)/server.o: $(SERVER_SRC)
@@ -38,4 +41,4 @@ $(BUILD_DIR)/io_func.o: ./io/io_func.cpp
 
 clean:
 	rm -f $(SERVER_OBJ) $(CLIENT_OBJ)
-	rm -f server client
+	rm -f $(SERVER_EXE) $(CLIENT_EXE)

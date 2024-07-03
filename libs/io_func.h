@@ -11,8 +11,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include "server.h"
 #include <string.h>
+#include "server.h"
+
+struct Conn;
 
 const size_t k_max_msg = 4096;
 

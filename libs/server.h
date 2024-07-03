@@ -13,7 +13,6 @@
 #include "sys/socket.h"
 #include <netinet/ip.h>
 #include <unistd.h>
-#include "io_func.h"
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <poll.h>
