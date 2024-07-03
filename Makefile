@@ -11,16 +11,31 @@ CLIENT_OBJ=$(BUILD_DIR)/client.o $(BUILD_DIR)/request.o $(BUILD_DIR)/response.o 
 all: server client
 
 server: $(SERVER_OBJ)
-	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@  # Tab indentation here
+	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
 client: $(CLIENT_OBJ)
-	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@  # Tab indentation here
+	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
-# Object file rules (note the automatic dependency generation)
-$(BUILD_DIR)/%.o: ./%.cpp
-	mkdir -p $(BUILD_DIR)  
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@  # Tab indentation here
+$(BUILD_DIR)/server.o: $(SERVER_SRC)
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/client.o: ./client/client/client.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/request.o: ./client/request/request.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/response.o: ./client/response/response.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/io_func.o: ./io/io_func.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(SERVER_OBJ) $(CLIENT_OBJ) # Remove only object files and executables
-	rm -f server client  # Remove executables
+	rm -f $(SERVER_OBJ) $(CLIENT_OBJ)
+	rm -f server client
