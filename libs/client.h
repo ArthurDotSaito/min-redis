@@ -19,4 +19,7 @@
 #include <request.h>
 #include <response.h>
 
+int32_t read_full(int fd, char *buff, size_t n);
+int32_t write_all(int fd, const char *buff, size_t n);
+
 #endif // REDIS_CLIENT_H

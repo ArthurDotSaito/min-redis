@@ -11,47 +11,21 @@ static void die(const char *msg)
     abort();
 }
 
-static int32_t query(int fd, const char *text)
+int32_t read_full(int fd, char *buff, size_t n)
 {
-    uint32_t len = (uint32_t)strlen(text);
-    if (len < k_max_msg)
+    while (n > 0)
     {
-        return -1;
-    }
-
-    char wbuff[4 + k_max_msg];
-    memcpy(wbuff, &len, 4);
-    memcpy(&wbuff[4], text, len);
-    if (int32_t err = write_all(fd, wbuff, 4 + len))
-    {
-        return err;
-    }
-
-    char rbuff[4 + k_max_msg + 1];
-    errno = 0;
-    int32_t err = read_full(fd, rbuff, 4);
-    if (err)
-    {
-        if (errno == 0)
+        ssize_t rv = read(fd, buff, n);
+        if (rv < 0)
         {
-            msg("EOF");
+            return -1;
         }
-        else
-        {
-            msg("read() error");
-        }
-        return err;
-    }
 
-    memcpy(&len, rbuff, 4);
-    if (len > k_max_msg)
-    {
-        msg("too long");
-        return -1;
-    }
+        assert((size_t)rv <= n);
 
-    rbuff[4 + len] = '\0';
-    printf("server says: %s\n", &rbuff[4]);
+        n -= (size_t)rv;
+        buff += rv;
+    }
     return 0;
 }
 
