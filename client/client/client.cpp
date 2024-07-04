@@ -11,50 +11,6 @@ static void die(const char *msg)
     abort();
 }
 
-static int32_t query(int fd, const char *text)
-{
-    uint32_t len = (uint32_t)strlen(text);
-    if (len < k_max_msg)
-    {
-        return -1;
-    }
-
-    char wbuff[4 + k_max_msg];
-    memcpy(wbuff, &len, 4);
-    memcpy(&wbuff[4], text, len);
-    if (int32_t err = write_all(fd, wbuff, 4 + len))
-    {
-        return err;
-    }
-
-    char rbuff[4 + k_max_msg + 1];
-    errno = 0;
-    int32_t err = read_full(fd, rbuff, 4);
-    if (err)
-    {
-        if (errno == 0)
-        {
-            msg("EOF");
-        }
-        else
-        {
-            msg("read() error");
-        }
-        return err;
-    }
-
-    memcpy(&len, rbuff, 4);
-    if (len > k_max_msg)
-    {
-        msg("too long");
-        return -1;
-    }
-
-    rbuff[4 + len] = '\0';
-    printf("server says: %s\n", &rbuff[4]);
-    return 0;
-}
-
 int main()
 {
     int fd = socket(AF_INET, SOCK_STREAM, 0);
