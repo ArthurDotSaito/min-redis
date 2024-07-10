@@ -6,6 +6,9 @@
 #define REDIS_COMMON_H
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 const size_t k_max_msg = 4096;
 

@@ -1,5 +1,8 @@
 {
   "files.associations": {
-    "vector": "cpp"
+    ".asm": "Assembly",
+    "vector": "cpp",
+    "string": "cpp",
+    "map": "cpp"
   }
 }

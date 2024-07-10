@@ -30,7 +30,7 @@ int main()
         die("connect");
     }
 
-    // multiuple pipelined requests:
+    // multiple pipelined requests:
     const char *query_list[3] = {"hello1", "hello2", "hello3"};
     for (size_t i = 0; i < 3; ++i)
     {
