@@ -15,4 +15,7 @@ enum
     RES_NX = 2
 };
 
+uint32_t handle_get(const std::vector<std::string> &command, uint8_t *res, uint32_t *reslen);
+uint32_t handle_set(const std::vector<std::string> &command, uint8_t *res, uint32_t *reslen);
+
 #endif // COMMANDS_H

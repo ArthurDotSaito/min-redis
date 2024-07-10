@@ -22,3 +22,12 @@ uint32_t handle_get(const std::vector<std::string> &command, uint8_t *res, uint3
 
     return RES_OK;
 }
+
+uint32_t handle_set(const std::vector<std::string> &command, uint8_t *res, uint32_t *reslen)
+{
+    (void)res;
+    (void)reslen;
+    g_map[command[1]] = command[2];
+
+    return RES_OK;
+}
