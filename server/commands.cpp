@@ -31,3 +31,12 @@ uint32_t handle_set(const std::vector<std::string> &command, uint8_t *res, uint3
 
     return RES_OK;
 }
+
+uint32_t handle_delete(const std::vector<std::string> &command, uint8_t *res, uint32_t *reslen)
+{
+    (void)res;
+    (void)reslen;
+    g_map.erase(command[1]);
+
+    return RES_OK;
+}
