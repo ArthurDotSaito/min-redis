@@ -37,7 +37,12 @@ int32_t read_response(int fd)
         return err;
     }
 
-    rbuff[4 + len] = '\0';
-    printf("server says: %s\n", &rbuff[4]);
+    uint32_t rescode = 0;
+    if (len < 4)
+    {
+        msg("bad response");
+    }
+    memcpy(&rescode, &rbuff[4], 4);
+    printf("server says: [%u] %.*s\n", rescode, len - 4, &rbuff[8]);
     return 0;
 }
