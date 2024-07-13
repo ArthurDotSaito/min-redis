@@ -1,12 +1,12 @@
 CC=g++
 CFLAGS=-Wall -Wextra -O2 -g 
 INCLUDES=-I./libs
-SERVER_SRC=./server/server.cpp
-CLIENT_SRC=./client/client/client.cpp ./client/request/request.cpp ./client/response/response.cpp ./io/io_func.cpp
+SERVER_SRC=./server/server.cpp 
+CLIENT_SRC=./client/client/client.cpp ./client/request/request.cpp ./client/response/response.cpp ./io/io_func.cpp ./commands/commands.cpp
 BUILD_DIR=./build
 
-SERVER_OBJ=$(BUILD_DIR)/server.o $(BUILD_DIR)/io_func.o
-CLIENT_OBJ=$(BUILD_DIR)/client.o $(BUILD_DIR)/request.o $(BUILD_DIR)/response.o $(BUILD_DIR)/io_func.o
+SERVER_OBJ=$(BUILD_DIR)/server.o $(BUILD_DIR)/io_func.o $(BUILD_DIR)/commands.o
+CLIENT_OBJ=$(BUILD_DIR)/client.o $(BUILD_DIR)/request.o $(BUILD_DIR)/response.o $(BUILD_DIR)/io_func.o $(BUILD_DIR)/commands.o
 
 SERVER_EXE=server_app
 CLIENT_EXE=client_app
@@ -38,6 +38,11 @@ $(BUILD_DIR)/response.o: ./client/response/response.cpp
 $(BUILD_DIR)/io_func.o: ./io/io_func.cpp
 	mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/commands.o: ./server/commands.cpp
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
 
 clean:
 	rm -f $(SERVER_OBJ) $(CLIENT_OBJ)

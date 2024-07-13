@@ -3,8 +3,6 @@
 //
 
 #include <commands.h>
-#include <string>
-#include <vector>
 
 std::map<std::string, std::string> g_map;
 
@@ -39,4 +37,9 @@ uint32_t handle_delete(const std::vector<std::string> &command, uint8_t *res, ui
     g_map.erase(command[1]);
 
     return RES_OK;
+}
+
+bool cmd_is(const std::string &word, const char *command)
+{
+    return 0 == strcasecmp(word.c_str(), command);
 }

@@ -11,7 +11,7 @@ static void die(const char *msg)
     abort();
 }
 
-int main()
+int main(int argc, char **argv)
 {
     int fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd < 0)
@@ -30,24 +30,20 @@ int main()
         die("connect");
     }
 
-    // multiple pipelined requests:
-    const char *query_list[3] = {"hello1", "hello2", "hello3"};
-    for (size_t i = 0; i < 3; ++i)
+    std::vector<std::string> command;
+    for (int i = 1; i < argc; ++i)
     {
-        int32_t err = send_request(fd, query_list[i]);
-        if (err)
-        {
-            goto L_DONE;
-        }
+        command.push_back(argv[i]);
     }
-
-    for (size_t i = 0; i < 3; ++i)
+    int32_t err = send_request(fd, command);
+    if (err)
     {
-        int32_t err = read_response(fd);
-        if (err)
-        {
-            goto L_DONE;
-        }
+        goto L_DONE;
+    }
+    err = read_response(fd);
+    if (err)
+    {
+        goto L_DONE;
     }
 
 L_DONE:

@@ -10,6 +10,6 @@
 #include <string.h>
 #include <io_func.h>
 
-int32_t send_request(int fd, const char *text);
+int32_t send_request(int fd, const std::vector<std::string> &command);
 
 #endif // REQUEST_H
