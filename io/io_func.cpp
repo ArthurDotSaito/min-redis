@@ -41,6 +41,50 @@ void msg(const char *msg)
     fprintf(stderr, "%s\n", msg);
 }
 
+int32_t parse_request(const u_int8_t *data, size_t len, std::vector<std::string> &out)
+{
+    if (len < 4)
+    {
+        return -1;
+    }
+
+    uint32_t n = 0;
+    memcpy(&n, &data[0], 4);
+    if (n > k_max_args)
+    {
+        return -1;
+    }
+
+    size_t pos = 4;
+    while (n--)
+    {
+        if (pos + 4 > len)
+        {
+            return -1;
+        }
+        uint32_t sz = 0;
+        memcpy(&sz, &data[pos], 4);
+        if (pos + 4 + sz > len)
+        {
+            return -1;
+        }
+        out.push_back(std::string((char *)&data[pos + 4], sz));
+        pos += 4 + sz;
+    }
+
+    if (pos != len)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+int32_t make_request(const uint8_t *req, uint32_t req_len, uint32_t *rescode, uint8_t *res, uint32_t *res_len)
+{
+    std::vector<std::string> cmd;
+    if (0 !=)
+}
+
 static bool try_one_request(Conn *conn)
 {
     if (conn->rbuff_size < 4)
@@ -63,8 +107,9 @@ static bool try_one_request(Conn *conn)
         return false;
     }
 
-    // Just doing something to feedback.
-    printf("client says: %.*s\n", len, &conn->rbuff[4]);
+    uint32_t rescode = 0;
+    uint32_t wlen = 0;
+    // make_request
 
     memcpy(&conn->wbuff[0], &len, 4);
     memcpy(&conn->wbuff[4], &conn->rbuff[4], len);
