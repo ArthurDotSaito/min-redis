@@ -81,8 +81,32 @@ int32_t parse_request(const u_int8_t *data, size_t len, std::vector<std::string>
 
 int32_t make_request(const uint8_t *req, uint32_t req_len, uint32_t *rescode, uint8_t *res, uint32_t *res_len)
 {
-    std::vector<std::string> cmd;
-    if (0 !=)
+    std::vector<std::string> command;
+    if (0 != parse_request(req, req_len, command))
+    {
+        msg("bad req");
+        return -1;
+    }
+    if (command.size() == 2 && cmd_is(command[0], "get"))
+    {
+        *rescode = handle_get(command, res, res_len);
+    }
+    else if (command.size() == 3 && cmd_is(command[0], "set"))
+    {
+        *rescode = handle_set(command, res, res_len);
+    }
+    else if (command.size() == 2 && cmd_is(command[0], "del"))
+    {
+        *rescode = handle_delete(command, res, res_len);
+    }
+    else
+    {
+        *rescode == RES_ERR;
+        const char *msg = "Unknown command";
+        strcpy((char *)res, msg);
+        return 0;
+    }
+    return 0;
 }
 
 static bool try_one_request(Conn *conn)

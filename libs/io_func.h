@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include "server.h"
 #include "common.h"
+#include <commands.h>
 
 struct Conn;
 
