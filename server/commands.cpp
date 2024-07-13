@@ -4,7 +4,6 @@
 
 #include <commands.h>
 
-
 std::map<std::string, std::string> g_map;
 
 uint32_t handle_get(const std::vector<std::string> &command, uint8_t *res, uint32_t *reslen)

@@ -101,7 +101,7 @@ int32_t make_request(const uint8_t *req, uint32_t req_len, uint32_t *rescode, ui
     }
     else
     {
-        *rescode == RES_ERR;
+        *rescode = RES_ERR;
         const char *msg = "Unknown command";
         strcpy((char *)res, msg);
         return 0;
