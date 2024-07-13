@@ -133,11 +133,17 @@ static bool try_one_request(Conn *conn)
 
     uint32_t rescode = 0;
     uint32_t wlen = 0;
-    // make_request
+    int32_t err = make_request(&conn->rbuff[4], len, &rescode, &conn->wbuff[4 + 4], &wlen);
 
-    memcpy(&conn->wbuff[0], &len, 4);
-    memcpy(&conn->wbuff[4], &conn->rbuff[4], len);
-    conn->wbuff_size = 4 + len;
+    if (err)
+    {
+        conn->state = STATE_END;
+        return false;
+    }
+    wlen += 4;
+    memcpy(&conn->wbuff[0], &wlen, 4);
+    memcpy(&conn->wbuff[4], &rescode, 4);
+    conn->wbuff_size = 4 + wlen;
 
     size_t remain = conn->rbuff_size - 4 - len;
     if (remain)
